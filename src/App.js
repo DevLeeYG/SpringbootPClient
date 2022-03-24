@@ -28,6 +28,25 @@ class App extends Component {
     console.log('items:', this.state.items);
   };
 
+  componentDidMount() {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Conten-Typet': 'application/json' },
+    };
+    fetch('http://localhost:8080/todo', requestOptions)
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          console.log(res.data);
+          this.setState({ items: res.data });
+        },
+        (error) => {
+          console.log(error);
+          this.setState({ error });
+        },
+      );
+  }
+
   render() {
     let todoItems = this.state.items.map((item, idx) => {
       return <Todo item={item} key={item.id} delete={this.delete} />;
