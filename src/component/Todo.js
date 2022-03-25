@@ -6,9 +6,6 @@ import {
   Checkbox,
   ListItemSecondaryAction,
   IconButton,
-  Paper,
-  Button,
-  Grid,
 } from '@material-ui/core';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 
@@ -17,6 +14,7 @@ class Todo extends Component {
     super(props);
     this.state = { item: props.item, readOnly: true };
     this.delete = props.delete;
+    this.update = props.update;
   }
   deleteEventHandler = () => {
     this.delete(this.state.item);
@@ -32,6 +30,7 @@ class Todo extends Component {
   enterKeyEventHandle = (e) => {
     if (e.key === 'Enter') {
       this.setState({ readOnly: true });
+      this.update(this.state.item);
     }
   };
 
@@ -46,6 +45,7 @@ class Todo extends Component {
     const thisItem = this.state.item;
     thisItem.done = !thisItem.done;
     this.setState({ item: thisItem });
+    this.update(this.state.item);
   };
 
   render() {
