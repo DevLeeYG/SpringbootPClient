@@ -56,5 +56,11 @@ export function signout() {
 }
 
 export function signup(userDTO) {
-  return call('/auth/signup', 'POST', userDTO);
+  return call('/auth/signup', 'POST', userDTO)
+    .then((res) => {
+      if (res) {
+        window.location.href = '/login';
+      }
+    })
+    .catch(alert('회원가입실패'));
 }
