@@ -1,12 +1,15 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import React, { Component } from 'react';
+import {
+  Button,
+  TextField,
+  Link,
+  Grid,
+  Container,
+  Typography,
+} from '@material-ui/core';
+import { signup } from '../../service/ApiSevice';
 
-import Typography from '@material-ui/core/Typography';
-import { Container, Grid } from '@material-ui/core';
-import { signin } from '../../service/ApiSevice';
-import { Link } from 'react-router-dom';
-class Login extends React.Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -15,26 +18,34 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
+    const username = data.get('username');
     const email = data.get('email');
     const password = data.get('password');
-    // ApiService의 signin 메서드를 사용 해 로그인.
-    signin({ email: email, password: password });
+    signup({ email: email, username: username, password: password });
   }
 
   render() {
     return (
       <Container component="main" maxWidth="xs" style={{ marginTop: '8%' }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography component="h1" variant="h5">
-              로그인
-            </Typography>
-          </Grid>
-        </Grid>
         <form noValidate onSubmit={this.handleSubmit}>
-          {' '}
-          {/* submit 버튼을 누르면 handleSubmit이 실행됨. */}
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography component="h1" variant="h5">
+                계정 생성
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="fname"
+                name="username"
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="유저 이름"
+                autoFocus
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -65,17 +76,21 @@ class Login extends React.Component {
                 variant="contained"
                 color="primary"
               >
-                로그인
+                계정 생성
               </Button>
             </Grid>
           </Grid>
-          <Link to="/signup" variant="body2">
-            <Grid item>회원이 아니라면? 회원가입</Grid>
-          </Link>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link href="/login" variant="body2">
+                이미 계정이 있습니까? 로그인 하세요.
+              </Link>
+            </Grid>
+          </Grid>
         </form>
       </Container>
     );
   }
 }
 
-export default Login;
+export default SignUp;
