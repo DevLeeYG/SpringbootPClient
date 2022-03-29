@@ -1,14 +1,23 @@
 import { API_BASE_URL } from '../config/app-config';
-import axios from 'axios';
+const ACCESS_TOKEN = 'ACCESS_TOKEN';
 
 export function call(api, method, request) {
+  let headers = new Headers({
+    'Content-Type': 'application/json',
+  });
+
+  // 로컬 스토리지에서 ACCESS TOKEN 가져오기
+  const accessToken = localStorage.getItem('ACCESS_TOKEN');
+  if (accessToken && accessToken !== null) {
+    headers.append('Authorization', 'Bearer ' + accessToken);
+  }
+
   let options = {
-    headers: new Headers({
-      'Content-Type': 'application/json',
-    }),
+    headers: headers,
     url: API_BASE_URL + api,
     method: method,
   };
+
   if (request) {
     // GET method
     options.body = JSON.stringify(request);
@@ -24,22 +33,17 @@ export function call(api, method, request) {
       }),
     )
     .catch((error) => {
-      // 추가된 부분
-      console.log(error.status);
-      if (error.status === 403) {
-        window.location.href = '/login'; // redirect
-      }
+      window.location.href = '/login'; // redirect
+
       return Promise.reject(error);
     });
 }
 
-//api 요청을 항 상 반복되는 문장을 썼던기억이 있는데 이렇게 그것또한 모듈로 작성해준다면 좀더 간결하게 쓸수 있을거같다
 export function signin(userDTO) {
   return call('/auth/signin', 'POST', userDTO).then((response) => {
-    console.log('124124', response);
     if (response.token) {
       // 로컬 스토리지에 토큰 저장
-      localStorage.setItem('ACCESS_TOKEN', response.token);
+      localStorage.setItem(ACCESS_TOKEN, response.token);
       // token이 존재하는 경우 Todo 화면으로 리디렉트
       window.location.href = '/';
     }
@@ -47,17 +51,10 @@ export function signin(userDTO) {
 }
 
 export function signout() {
-  localStorage.setItem('ACCESS_TOKEN', null);
+  localStorage.setItem(ACCESS_TOKEN, null);
   window.location.href = '/login';
 }
 
 export function signup(userDTO) {
-  axios
-    .post('http://localhost:8080/auth/signup', userDTO, {
-      headers: { 'Content-Type': `application/json` },
-    })
-    .then((res) => {
-      console.log(res);
-      if (res.status === 200) window.location.href = '/login';
-    });
+  return call('/auth/signup', 'POST', userDTO);
 }
