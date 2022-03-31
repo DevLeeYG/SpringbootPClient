@@ -35,22 +35,26 @@ class AddTodo extends Component {
     return (
       <Paper style={{ margin: 16, padding: 16 }}>
         <Grid container>
-          <TextField
-            onChange={this.onInputChange}
-            value={this.state.item.title}
-            placeholder="Add Todo here"
-            fullWidth
-          />
-        </Grid>
-        <Grid xs={1} md={1} item>
-          <Button
-            onClick={this.onButtonClick}
-            fullWidth
-            color="secondary"
-            variant="outlined"
-          >
-            +
-          </Button>
+          <Grid xs={11} md={11} item style={{ paddingRight: 16 }}>
+            <TextField
+              placeholder="Add Todo here"
+              fullWidth
+              onChange={this.onInputChange}
+              value={this.state.item.title}
+              onKeyPress={this.enterKeyEventHandler}
+            />
+          </Grid>
+          <Grid xs={1} md={1} item>
+            <Button
+          sx={{height:'100%'}}
+              fullWidth
+              color="secondary"
+              variant="outlined"
+              onClick={this.onButtonClick}
+            >
+              +
+            </Button>
+          </Grid>
         </Grid>
       </Paper>
     );
